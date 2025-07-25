@@ -8,6 +8,7 @@ class RenameFrenchColumns < ActiveRecord::Migration[7.2]
     rename_column :bl, :nbre_40pieds_frigo, :containers_40ft_reefer
     rename_column :bl, :nbre_20pieds_special, :containers_20ft_special
     rename_column :bl, :nbre_40pieds_special, :containers_40ft_special
+    rename_column :bl, :exempte, :exempted
 
     # Same for client table
     rename_column :client, :nom, :name              # Customer name

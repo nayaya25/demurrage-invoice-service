@@ -34,7 +34,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_25_153639) do
     t.string "type_depotage", limit: 30
     t.datetime "date_validite", precision: nil
     t.string "statut", limit: 30
-    t.boolean "exempte", default: false, null: false
+    t.boolean "exempted", default: false, null: false
     t.boolean "blocked_for_refund", default: false, null: false
     t.string "reference", limit: 60
     t.text "comment"
@@ -53,6 +53,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_25_153639) do
     t.string "place_delivery", limit: 60
     t.string "port_loading", limit: 60
     t.string "port_discharge", limit: 60
+    t.index ["arrival_date", "freetime"], name: "idx_bl_arrival_freetime"
     t.index ["arrival_date"], name: "arrival_date"
     t.index ["consignee_code"], name: "consignee_code"
     t.index ["consignee_name"], name: "consignee_name"
