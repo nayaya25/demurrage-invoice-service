@@ -1,4 +1,5 @@
 class Customer < ApplicationRecord
+  include EnumConstants
   self.table_name = 'client'
   self.primary_key = 'id_client'
 
@@ -7,15 +8,15 @@ class Customer < ApplicationRecord
   has_many :invoices, through: :bill_of_landings
   has_many :refund_requests, through: :bill_of_landings
 
+  # Enum
+  enum :status, { active: ACTIVE, inactive: INACTIVE }
+
   # Validations
   validates :name, presence: true, length: { maximum: 60 }
   validates :code, length: { maximum: 20 }
-  validates :nom_groupe, presence: true, length: { maximum: 150 }
-  validates :paie_caution, inclusion: { in: [true, false] }
 
   # Scopes
-  scope :active, -> { where.not(statut: 'inactive') }
-  scope :priority, -> { where(prioritaire: true) }
+  scope :priority, -> { where(priority: true) }
 
   def display_name
     "#{name} (#{code})"
