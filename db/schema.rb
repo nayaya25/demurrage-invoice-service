@@ -71,7 +71,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_25_155038) do
     t.boolean "paie_caution", null: false
     t.integer "freetime_frigo"
     t.integer "freetime_sec"
-    t.boolean "prioritaire"
+    t.boolean "priority"
     t.integer "salesrepid"
     t.integer "financerepid"
     t.integer "cservrepid"
