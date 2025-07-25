@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_07_25_155038) do
+ActiveRecord::Schema[7.2].define(version: 2025_07_25_200144) do
   create_table "bl", primary_key: "id_bl", id: :integer, charset: "latin1", force: :cascade do |t|
     t.integer "id_upload"
     t.datetime "date_upload", precision: nil
@@ -33,12 +33,12 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_25_155038) do
     t.string "reef", limit: 1, default: ""
     t.string "type_depotage", limit: 30
     t.datetime "date_validite", precision: nil
-    t.string "statut", limit: 30
+    t.string "status", limit: 30
     t.boolean "exempted", default: false, null: false
     t.boolean "blocked_for_refund", default: false, null: false
     t.string "reference", limit: 60
     t.text "comment"
-    t.boolean "valide"
+    t.boolean "is_valid"
     t.string "released_statut", limit: 20
     t.text "released_comment"
     t.string "operator", limit: 20
@@ -65,7 +65,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_25_155038) do
 
   create_table "client", primary_key: "id_client", id: :integer, charset: "latin1", force: :cascade do |t|
     t.string "name", limit: 60, null: false
-    t.string "statut", limit: 20
+    t.string "status", limit: 20
     t.string "code", limit: 20
     t.string "nom_groupe", limit: 150, null: false
     t.boolean "paie_caution", null: false
@@ -84,12 +84,12 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_25_155038) do
     t.string "bl_number", null: false, collation: "latin1_swedish_ci"
     t.string "customer_code", limit: 20, null: false
     t.string "customer_name", limit: 60, null: false
-    t.decimal "amount", precision: 12, null: false
+    t.decimal "amount", precision: 12, scale: 2, null: false
     t.decimal "montant_orig", precision: 12, scale: 2
     t.string "currency", limit: 6, default: "XOF"
     t.string "status", limit: 10, default: "init", null: false
-    t.datetime "date_facture", precision: nil, null: false
-    t.integer "id_utilisateur", null: false
+    t.datetime "issued_date", precision: nil, null: false
+    t.integer "user_id", null: false
     t.string "create_type_utilisateur", limit: 20
     t.datetime "created_at", precision: nil, null: false
     t.integer "id_utilisateur_update"
@@ -104,12 +104,12 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_25_155038) do
     t.string "refund_amount", limit: 15
     t.string "deduction", limit: 15
     t.string "status", limit: 10, default: "PENDING"
-    t.integer "id_transitaire", null: false
+    t.integer "forwarder_id", null: false
     t.integer "id_transitaire_maison"
     t.boolean "transitaire_notifie"
     t.boolean "maison_notifie"
     t.boolean "banque_notifie"
-    t.datetime "date_demande", precision: nil
+    t.datetime "request_date", precision: nil
     t.datetime "date_refund_traite", precision: nil
     t.string "type_paiement", limit: 10
     t.string "pret", limit: 10
@@ -137,9 +137,16 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_25_155038) do
     t.string "email_client", limit: 60
     t.index ["bl_number", "status"], name: "idx_remboursement_bl_status"
     t.index ["bl_number"], name: "numero_bl"
-    t.index ["date_demande"], name: "date_demande"
     t.index ["reason_for_refund"], name: "reason_for_refund"
+    t.index ["request_date"], name: "date_demande"
     t.index ["status"], name: "statut"
+  end
+
+  create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.string "email"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   add_foreign_key "facture", "bl", column: "bl_number", primary_key: "number", name: "fk_facture_bl"
