@@ -10,11 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_07_25_151720) do
+ActiveRecord::Schema[7.2].define(version: 2025_07_25_153639) do
   create_table "bl", primary_key: "id_bl", id: :integer, charset: "latin1", force: :cascade do |t|
     t.integer "id_upload"
     t.datetime "date_upload", precision: nil
-    t.string "numero_bl", limit: 9, null: false
+    t.string "number", limit: 9, null: false
     t.integer "id_client"
     t.string "consignee_code", limit: 20
     t.string "consignee_name", limit: 60
@@ -24,12 +24,12 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_25_151720) do
     t.string "vessel_voyage", limit: 10
     t.datetime "arrival_date", precision: nil, default: -> { "CURRENT_TIMESTAMP" }
     t.integer "freetime"
-    t.integer "nbre_20pieds_sec"
-    t.integer "nbre_40pieds_sec"
-    t.integer "nbre_20pieds_frigo"
-    t.integer "nbre_40pieds_frigo"
-    t.integer "nbre_20pieds_special"
-    t.integer "nbre_40pieds_special"
+    t.integer "containers_20ft_dry"
+    t.integer "containers_40ft_dry"
+    t.integer "containers_20ft_reefer"
+    t.integer "containers_40ft_reefer"
+    t.integer "containers_20ft_special"
+    t.integer "containers_40ft_special"
     t.string "reef", limit: 1, default: ""
     t.string "type_depotage", limit: 30
     t.datetime "date_validite", precision: nil
@@ -56,15 +56,15 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_25_151720) do
     t.index ["arrival_date"], name: "arrival_date"
     t.index ["consignee_code"], name: "consignee_code"
     t.index ["consignee_name"], name: "consignee_name"
-    t.index ["numero_bl"], name: "index_bl_on_numero_bl_unique", unique: true
-    t.index ["numero_bl"], name: "numero_bl"
+    t.index ["number"], name: "index_bl_on_numero_bl_unique", unique: true
+    t.index ["number"], name: "numero_bl"
     t.index ["reef"], name: "reef"
   end
 
   create_table "client", primary_key: "id_client", id: :integer, charset: "latin1", force: :cascade do |t|
-    t.string "nom", limit: 60, null: false
+    t.string "name", limit: 60, null: false
     t.string "statut", limit: 20
-    t.string "code_client", limit: 20
+    t.string "code", limit: 20
     t.string "nom_groupe", limit: 150, null: false
     t.boolean "paie_caution", null: false
     t.integer "freetime_frigo"
@@ -79,29 +79,29 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_25_151720) do
 
   create_table "facture", primary_key: "id_facture", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.string "reference", limit: 10, null: false
-    t.string "numero_bl", null: false, collation: "latin1_swedish_ci"
-    t.string "code_client", limit: 20, null: false
-    t.string "nom_client", limit: 60, null: false
-    t.decimal "montant_facture", precision: 12, null: false
+    t.string "bl_number", null: false, collation: "latin1_swedish_ci"
+    t.string "customer_code", limit: 20, null: false
+    t.string "customer_name", limit: 60, null: false
+    t.decimal "amount", precision: 12, null: false
     t.decimal "montant_orig", precision: 12, scale: 2
-    t.string "devise", limit: 6, default: "XOF"
-    t.string "statut", limit: 10, default: "init", null: false
+    t.string "currency", limit: 6, default: "XOF"
+    t.string "status", limit: 10, default: "init", null: false
     t.datetime "date_facture", precision: nil, null: false
     t.integer "id_utilisateur", null: false
     t.string "create_type_utilisateur", limit: 20
     t.datetime "created_at", precision: nil, null: false
     t.integer "id_utilisateur_update"
     t.datetime "updated_at", precision: nil
-    t.index ["numero_bl"], name: "fk_facture_bl"
+    t.index ["bl_number"], name: "fk_facture_bl"
     t.index ["reference"], name: "unique_reference", unique: true
   end
 
   create_table "remboursement", primary_key: "id_remboursement", id: :integer, charset: "latin1", force: :cascade do |t|
-    t.string "numero_bl", limit: 9, null: false
-    t.string "montant_demande", limit: 15
+    t.string "bl_number", limit: 9, null: false
+    t.string "amount_requested", limit: 15
     t.string "refund_amount", limit: 15
     t.string "deduction", limit: 15
-    t.string "statut", limit: 10, default: "PENDING"
+    t.string "status", limit: 10, default: "PENDING"
     t.integer "id_transitaire", null: false
     t.integer "id_transitaire_maison"
     t.boolean "transitaire_notifie"
@@ -133,11 +133,11 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_25_151720) do
     t.datetime "date_banque_notified", precision: nil
     t.string "email_agency", limit: 60
     t.string "email_client", limit: 60
+    t.index ["bl_number"], name: "numero_bl"
     t.index ["date_demande"], name: "date_demande"
-    t.index ["numero_bl"], name: "numero_bl"
     t.index ["reason_for_refund"], name: "reason_for_refund"
-    t.index ["statut"], name: "statut"
+    t.index ["status"], name: "statut"
   end
 
-  add_foreign_key "facture", "bl", column: "numero_bl", primary_key: "numero_bl", name: "fk_facture_bl"
+  add_foreign_key "facture", "bl", column: "bl_number", primary_key: "number", name: "fk_facture_bl"
 end
