@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_07_25_153639) do
+ActiveRecord::Schema[7.2].define(version: 2025_07_25_155038) do
   create_table "bl", primary_key: "id_bl", id: :integer, charset: "latin1", force: :cascade do |t|
     t.integer "id_upload"
     t.datetime "date_upload", precision: nil
@@ -57,6 +57,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_25_153639) do
     t.index ["arrival_date"], name: "arrival_date"
     t.index ["consignee_code"], name: "consignee_code"
     t.index ["consignee_name"], name: "consignee_name"
+    t.index ["exempted"], name: "idx_bl_exempt"
     t.index ["number"], name: "index_bl_on_numero_bl_unique", unique: true
     t.index ["number"], name: "numero_bl"
     t.index ["reef"], name: "reef"
@@ -93,7 +94,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_25_153639) do
     t.datetime "created_at", precision: nil, null: false
     t.integer "id_utilisateur_update"
     t.datetime "updated_at", precision: nil
-    t.index ["bl_number"], name: "fk_facture_bl"
+    t.index ["bl_number", "status"], name: "idx_facture_bl_status"
     t.index ["reference"], name: "unique_reference", unique: true
   end
 
@@ -134,6 +135,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_25_153639) do
     t.datetime "date_banque_notified", precision: nil
     t.string "email_agency", limit: 60
     t.string "email_client", limit: 60
+    t.index ["bl_number", "status"], name: "idx_remboursement_bl_status"
     t.index ["bl_number"], name: "numero_bl"
     t.index ["date_demande"], name: "date_demande"
     t.index ["reason_for_refund"], name: "reason_for_refund"
