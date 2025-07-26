@@ -33,17 +33,22 @@ mysql -u your_user -p your_database < test_schema.sql
 rails db:migrate
 ```
 
-4. Run the seeder:
+5Run the seeder:
 ```bash
 rails db:seed
 ```
 
-5. Start the application:
+6. Start the application:
 ```bash
 rails server
 ```
 
-5. Test the Endpoint:
+7. To Run Test:
+```bash
+rspec --format documentation
+```
+
+7. To Test the Endpoint:
 ```bash
 curl -X POST http://localhost:3000/api/v1/invoices
 ```
