@@ -9,8 +9,8 @@ module Demurrage
       bls_overdue_today.find_each do |bl|
         next if should_skip_bl?(bl)
 
-        Demurrage::BlInvoiceCreatorInteractor.call(bl)
-        count += 1
+        result = Demurrage::BlInvoiceCreatorInteractor.call(bl)
+        count += 1 if result.present?
       end
 
       count
