@@ -1,0 +1,50 @@
+<div class="container mt-4">
+  <h1>Overdue Invoices</h1>
+
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead class="table-dark">
+      <tr>
+        <th>Invoice #</th>
+        <th>BL Number</th>
+        <th>Customer</th>
+        <th>Amount (USD)</th>
+        <th>Status</th>
+        <th>Invoice Date</th>
+        <th>Arrival Date</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @invoices.each do |invoice| %>
+        <tr>
+          <td><%= invoice.reference %></td>
+          <td><%= invoice.bl_number %></td>
+          <td>
+            <strong><%= invoice.customer_name %></strong><br>
+            <small class="text-muted"><%= invoice.customer_code %></small>
+          </td>
+          <td class="text-end">$<%= number_with_delimiter(invoice.amount) %></td>
+          <td>
+              <span class="badge bg-<%= if invoice.status == 'open'
+                                          'warning'
+                                        else
+                                          invoice.status == 'paid' ? 'success' : 'info'
+                                        end %>">
+                <%= invoice.status.upcase %>
+              </span>
+          </td>
+          <td><%= invoice.issued_date.strftime('%b %d, %Y') || "N/A"%></td>
+          <td><%= invoice.bill_of_landing.arrival_date.strftime('%b %d, %Y') || "N/A"%></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <% if @invoices.empty? %>
+    <div class="alert alert-info">
+      <i class="fas fa-info-circle"></i>
+      No overdue invoices found.
+    </div>
+  <% end %>
+</div>
