@@ -21,7 +21,7 @@ This system automates the generation of demurrage invoices for Bills of Lading (
 bundle install
 ```
 
-2. Configure database credentials in `config/database.yml`
+2. Configure database credentials in `config/database.yml`. See .env.example for .env keys
 
 3. Import the legacy schema:
 ```bash
