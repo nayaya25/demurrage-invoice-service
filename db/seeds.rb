@@ -56,7 +56,7 @@ puts "Creating Bill of Landings..."
 # Scenario 1: BLs that become overdue TODAY (for invoice generation testing)
 bl_overdue_today = BillOfLanding.create!(
   number: "BL0001234",
-  arrival_date: Date.current - 7.days,  # Arrived 7 days ago
+  arrival_date: Date.current - 8.days,  # Arrived 7 days ago
   freetime: 7,                          # 7 days free time = expires TODAY
   vessel_name: "MV Atlantic",
   consignee_name: "ACME Shipping Corp",

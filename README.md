@@ -1,6 +1,6 @@
 # Demurrage Invoice System
 
-A Rails 7.x application for managing demurrage invoices for import cargo operations, built to modernize and improve upon a legacy French MySQL database system.
+A Rails 7.2 application for managing demurrage invoices for import cargo operations, built to modernize and improve upon a legacy French MySQL database system.
 
 ## Overview
 
