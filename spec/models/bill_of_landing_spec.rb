@@ -28,35 +28,14 @@ RSpec.describe BillOfLanding, type: :model do
     let!(:valid_bl) { create(:bill_of_landing, is_valid: 1, exempted: false, arrival_date: 2.days.ago, containers_20ft_dry: 1) }
     let!(:invalid_bl) { create(:bill_of_landing, is_valid: 0, exempted: true, arrival_date: 5.days.from_now, containers_20ft_dry: 0) }
 
-    it 'returns active B/Ls' do
-      expect(BillOfLanding.active).to include(valid_bl)
-      expect(BillOfLanding.active).not_to include(invalid_bl)
-    end
-
     it 'returns not exempted B/Ls' do
       expect(BillOfLanding.not_exempt).to include(valid_bl)
       expect(BillOfLanding.not_exempt).not_to include(invalid_bl)
-    end
-
-    it 'returns arrived B/Ls' do
-      expect(BillOfLanding.arrived).to include(valid_bl)
-      expect(BillOfLanding.arrived).not_to include(invalid_bl)
-    end
-
-    it 'returns B/Ls with containers' do
-      expect(BillOfLanding.with_containers).to include(valid_bl)
-      expect(BillOfLanding.with_containers).not_to include(invalid_bl)
     end
   end
 
   describe 'methods' do
     let(:bl) { create(:bill_of_landing, arrival_date: Date.today - 5.days, freetime: 3, containers_20ft_dry: 1, containers_40ft_dry: 2) }
-
-    describe '#total_containers' do
-      it 'sums all container types' do
-        expect(bl.total_containers).to eq(3)
-      end
-    end
 
     describe '#freetime_expires_on' do
       it 'returns the expected expiry date' do

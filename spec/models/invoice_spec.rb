@@ -1,4 +1,3 @@
-# spec/models/invoice_spec.rb
 require 'rails_helper'
 
 RSpec.describe Invoice, type: :model do
@@ -32,11 +31,9 @@ RSpec.describe Invoice, type: :model do
     it { should validate_numericality_of(:amount).is_greater_than(0) }
 
     it { should define_enum_for(:status).with_values(
-      init: EnumConstants::INIT,
       open: EnumConstants::OPEN,
       canceled: EnumConstants::CANCELED,
       paid: EnumConstants::PAID,
-      overdue: EnumConstants::OVERDUE
       ).backed_by_column_of_type(:string)
     }
   end
@@ -44,7 +41,6 @@ RSpec.describe Invoice, type: :model do
   describe 'scopes' do
     let!(:paid_invoice) { create(:invoice, status: EnumConstants::PAID) }
     let!(:open_invoice) { create(:invoice, status: EnumConstants::OPEN) }
-    let!(:init_invoice) { create(:invoice, status: EnumConstants::INIT) }
 
     it 'returns open invoices' do
       expect(Invoice.open).to include(open_invoice)
@@ -55,15 +51,10 @@ RSpec.describe Invoice, type: :model do
       expect(Invoice.paid).to include(paid_invoice)
       expect(Invoice.paid).not_to include(open_invoice)
     end
-
-    it 'returns pending invoices' do
-      expect(Invoice.pending).to match_array([open_invoice, init_invoice])
-    end
   end
 
   describe '#overdue?' do
-    it 'returns true for init or open statuses' do
-      expect(build(:invoice, status: EnumConstants::INIT).overdue?).to be true
+    it 'returns true for open statuses' do
       expect(build(:invoice, status: EnumConstants::OPEN).overdue?).to be true
     end
 

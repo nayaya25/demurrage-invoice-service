@@ -14,8 +14,8 @@ RSpec.describe Customer, type: :model do
   end
 
   describe 'scopes' do
-    let!(:active_customer) { create(:customer, status: 'active') }
-    let!(:inactive_customer) { create(:customer, status: 'inactive') }
+    let!(:active_customer) { create(:customer, status: :active) }
+    let!(:inactive_customer) { create(:customer, status: :inactive) }
     let!(:priority_customer) { create(:customer, priority: true) }
 
     it 'returns active customers' do
