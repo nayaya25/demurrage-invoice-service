@@ -74,7 +74,7 @@ bl_overdue_today = BillOfLanding.create!(
 
 bl_overdue_today_2 = BillOfLanding.create!(
   number: "BL0002345",
-  arrival_date: Date.current - 5.days,  # Arrived 5 days ago
+  arrival_date: Date.current - 6.days,  # Arrived 6 days ago
   freetime: 5,                          # 5 days free time = expires TODAY
   vessel_name: "MV Pacific",
   consignee_name: "Global Logistics Ltd",
@@ -177,7 +177,7 @@ Invoice.create!(
   customer_name: bl_with_invoice.customer.name,
   amount: 240.0,  # 3 containers * 80 USD
   currency: "USD",
-  status: "INIT",
+  status: "OPEN",
   issued_date: Date.current - 2.days,
   user_id: 1
 )
