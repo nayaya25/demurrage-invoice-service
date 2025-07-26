@@ -16,9 +16,7 @@ class Invoice < ApplicationRecord
 
   # Enum
   enum :status, {
-    init: EnumConstants::INIT,
     open: EnumConstants::OPEN,
-    overdue: EnumConstants::OVERDUE,
     canceled: EnumConstants::CANCELED,
     paid: EnumConstants::PAID
   }
@@ -26,7 +24,6 @@ class Invoice < ApplicationRecord
   # Scopes
   scope :open, -> { where(status: EnumConstants::OPEN) }
   scope :paid, -> { where(status: EnumConstants::PAID) }
-  scope :pending, -> { where(status: [ EnumConstants::INIT, EnumConstants::OPEN ]) }
   scope :recent, -> { order(created_at: :desc) }
 
   # Callbacks
@@ -34,7 +31,7 @@ class Invoice < ApplicationRecord
   before_validation :sync_customer_details
 
   def overdue?
-    init? || open?
+    open?
   end
 
   def amount_in_cents

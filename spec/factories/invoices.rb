@@ -18,7 +18,7 @@ FactoryBot.define do
     end
 
     trait :overdue do
-      status { "OVERDUE" }
+      status { "OPEN" }
       issued_date { 30.days.ago }
     end
   end
