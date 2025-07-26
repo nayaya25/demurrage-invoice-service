@@ -13,7 +13,12 @@ class RefundRequest < ApplicationRecord
   validates :forwarder_id, presence: true
 
   # Enum
-  enum :status, { pending: EnumConstants::PENDING, approved: EnumConstants::APPROVED, processed: EnumConstants::PROCESSED, rejected: EnumConstants::REJECTED }
+  enum :status, {
+    pending: EnumConstants::PENDING,
+    approved: EnumConstants::APPROVED,
+    processed: EnumConstants::PROCESSED,
+    rejected: EnumConstants::REJECTED
+  }
 
   # Scopes
   scope :pending, -> { where(status: :pending) }

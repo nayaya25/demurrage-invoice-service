@@ -6,7 +6,6 @@ class Invoice < ApplicationRecord
   # Associations
   belongs_to :bill_of_landing, foreign_key: 'bl_number', primary_key: 'number'
   has_one :customer, through: :bill_of_landing
-  belongs_to :user, foreign_key: 'user_id', primary_key: 'id'
 
   # Validations
   validates :reference, presence: true, uniqueness: true, length: { maximum: 10 }
@@ -14,10 +13,15 @@ class Invoice < ApplicationRecord
   validates :customer_code, presence: true, length: { maximum: 20 }
   validates :customer_name, presence: true, length: { maximum: 60 }
   validates :amount, presence: true, numericality: { greater_than: 0 }
-  validates :currency, presence: true, inclusion: { in: EnumConstants::CURRENCIES }
 
   # Enum
-  enum :status, { init: EnumConstants::INIT, open: EnumConstants::OPEN, canceled: EnumConstants::CANCELED, paid: PAID }
+  enum :status, {
+    init: EnumConstants::INIT,
+    open: EnumConstants::OPEN,
+    overdue: EnumConstants::OVERDUE,
+    canceled: EnumConstants::CANCELED,
+    paid: EnumConstants::PAID
+  }
 
   # Scopes
   scope :open, -> { where(status: EnumConstants::OPEN) }

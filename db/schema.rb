@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_07_25_200144) do
+ActiveRecord::Schema[7.2].define(version: 2025_07_25_153639) do
   create_table "bl", primary_key: "id_bl", id: :integer, charset: "latin1", force: :cascade do |t|
     t.integer "id_upload"
     t.datetime "date_upload", precision: nil
@@ -53,11 +53,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_25_200144) do
     t.string "place_delivery", limit: 60
     t.string "port_loading", limit: 60
     t.string "port_discharge", limit: 60
-    t.index ["arrival_date", "freetime"], name: "idx_bl_arrival_freetime"
     t.index ["arrival_date"], name: "arrival_date"
     t.index ["consignee_code"], name: "consignee_code"
     t.index ["consignee_name"], name: "consignee_name"
-    t.index ["exempted"], name: "idx_bl_exempt"
     t.index ["number"], name: "index_bl_on_numero_bl_unique", unique: true
     t.index ["number"], name: "numero_bl"
     t.index ["reef"], name: "reef"
@@ -135,18 +133,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_25_200144) do
     t.datetime "date_banque_notified", precision: nil
     t.string "email_agency", limit: 60
     t.string "email_client", limit: 60
-    t.index ["bl_number", "status"], name: "idx_remboursement_bl_status"
     t.index ["bl_number"], name: "numero_bl"
     t.index ["reason_for_refund"], name: "reason_for_refund"
     t.index ["request_date"], name: "date_demande"
     t.index ["status"], name: "statut"
-  end
-
-  create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "name"
-    t.string "email"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   add_foreign_key "facture", "bl", column: "bl_number", primary_key: "number", name: "fk_facture_bl"

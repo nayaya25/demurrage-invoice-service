@@ -5,7 +5,6 @@ RSpec.describe Invoice, type: :model do
   describe 'associations' do
     it { should belong_to(:bill_of_landing).with_foreign_key('bl_number').with_primary_key('number') }
     it { should have_one(:customer).through(:bill_of_landing) }
-    it { should belong_to(:user).with_foreign_key('user_id').with_primary_key('id') }
   end
 
   describe 'validations' do
@@ -32,15 +31,13 @@ RSpec.describe Invoice, type: :model do
     it { should validate_presence_of(:amount) }
     it { should validate_numericality_of(:amount).is_greater_than(0) }
 
-    it { should validate_presence_of(:currency) }
-    it { should validate_inclusion_of(:currency).in_array(EnumConstants::CURRENCIES) }
-
     it { should define_enum_for(:status).with_values(
       init: EnumConstants::INIT,
       open: EnumConstants::OPEN,
       canceled: EnumConstants::CANCELED,
-      paid: EnumConstants::PAID
-    ).backed_by_column_of_type(:string)
+      paid: EnumConstants::PAID,
+      overdue: EnumConstants::OVERDUE
+      ).backed_by_column_of_type(:string)
     }
   end
 

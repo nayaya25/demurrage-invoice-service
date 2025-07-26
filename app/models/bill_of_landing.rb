@@ -31,10 +31,7 @@ class BillOfLanding < ApplicationRecord
   end
 
   # Scopes
-  scope :active, -> { where(is_valid: 1) }
   scope :not_exempt, -> { where(exempted: false) }
-  scope :arrived, -> { where('arrival_date <= ?', Time.current) }
-  scope :with_containers, -> { where('containers_20ft_dry > 0 OR containers_40ft_dry > 0 OR containers_20ft_reefer > 0 OR containers_40ft_reefer > 0 OR containers_20ft_special > 0 OR containers_40ft_special > 0') }
 
   # Business logic methods
   def total_containers
@@ -43,6 +40,14 @@ class BillOfLanding < ApplicationRecord
       containers_20ft_reefer, containers_40ft_reefer,
       containers_20ft_special, containers_40ft_special
     ].compact.sum
+  end
+
+  def self.overdue_today
+    today = Date.current
+    joins(:customer)
+      .where("DATE(arrival_date + INTERVAL freetime DAY) < ?", today)
+      .where(exempted: false, is_valid: 1)
+      .includes(:customer, :invoices)
   end
 
   def freetime_expires_on
@@ -61,7 +66,11 @@ class BillOfLanding < ApplicationRecord
   end
 
   def has_open_invoice?
-    invoices.where.not(status: PAID).exists?
+    invoices.where.not(status: :paid).exists?
+  end
+
+  def has_pending_refund?
+    refund_requests.where(status: :pending).exists?
   end
 
   def blocked_for_invoicing?

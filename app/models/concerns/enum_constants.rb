@@ -4,9 +4,10 @@ module EnumConstants
     OPEN ||= "OPEN".freeze
     INIT ||= "INIT".freeze
     PAID ||= "PAID".freeze
+    OVERDUE ||= "OVERDUE".freeze
     CANCELED ||= "CANCELED".freeze
     CURRENCIES ||= %w[USD EUR XOF].freeze
-    INVOICE_STATUSES ||= %w[OPEN, INIT, PAID, CANCELED].freeze
+    INVOICE_STATUSES ||= %w[OPEN INIT PAID CANCELED OVERDUE].freeze
     PENDING ||= "PENDING".freeze
     APPROVED ||= "APPROVED".freeze
     REJECTED ||= "REJECTED".freeze
