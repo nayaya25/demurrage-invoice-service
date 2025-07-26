@@ -5,11 +5,15 @@ module Demurrage
     end
 
     def call
+      count = 0
       bls_overdue_today.find_each do |bl|
         next if should_skip_bl?(bl)
 
         Demurrage::BlInvoiceCreatorInteractor.call(bl)
+        count += 1
       end
+
+      count
     end
 
     private

@@ -31,7 +31,7 @@ module Demurrage
     end
 
     def generate_reference
-      "DEM#{Date.current.strftime('%y%m%d')}#{SecureRandom.hex(1).upcase}"
+      "RF#{Date.current.strftime('%y%m%d')}#{SecureRandom.hex(1).upcase}"
     end
   end
 end
