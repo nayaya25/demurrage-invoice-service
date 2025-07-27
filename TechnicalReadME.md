@@ -88,6 +88,14 @@ def total_containers
     containers_20ft_special, containers_40ft_special
   ].compact.sum
 end
+
+def days_since_arrival
+  return 0 unless arrival_date
+  (Date.current - arrival_date.to_date).to_i
+end
+
+defaulting_days = [bl.days_since_arrival - bl.freetime, 0].max
+expected_amount = bl.total_containers * defaulting_days * 80.0
 ```
 
 ### 5. Business Rules Implementation
