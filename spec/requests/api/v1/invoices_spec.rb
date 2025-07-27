@@ -40,18 +40,22 @@ RSpec.describe "POST /api/v1/invoices", type: :request do
         expect(response_body["count"]).to eq(2)
         expect(response_body["timestamp"]).to be_present
 
-        # Verify invoices were created correctly
+        # Verify invoices were created correctly with new calculation
         invoice_1 = Invoice.find_by(bl_number: overdue_bl_1.number)
-        expected_amount = overdue_bl_1.total_containers * 80.0
+        defaulting_days_1 = overdue_bl_1.days_since_arrival - overdue_bl_1.freetime
+        expected_amount_1 = overdue_bl_1.total_containers * defaulting_days_1 * 80.0
+
         expect(invoice_1).to be_present
-        expect(invoice_1.amount).to eq(expected_amount)
+        expect(invoice_1.amount).to eq(expected_amount_1) # 3 containers * 5 days * $80 = $1200
         expect(invoice_1.customer_code).to eq(customer.code)
         expect(invoice_1.status).to eq("open")
 
         invoice_2 = Invoice.find_by(bl_number: overdue_bl_2.number)
-        expected_amount_2 = overdue_bl_2.total_containers * 80.0
+        defaulting_days_2 = overdue_bl_2.days_since_arrival - overdue_bl_2.freetime
+        expected_amount_2 = overdue_bl_2.total_containers * defaulting_days_2 * 80.0
+
         expect(invoice_2).to be_present
-        expect(invoice_2.amount).to eq(expected_amount_2)
+        expect(invoice_2.amount).to eq(expected_amount_2) # 3 containers * 5 days * $80 = $1200
         expect(invoice_2.customer_code).to eq(customer.code)
       end
 
@@ -63,6 +67,27 @@ RSpec.describe "POST /api/v1/invoices", type: :request do
           expect(invoice.reference).to match(/\ARF\d{6}[A-F0-9]{2}\z/)
           expect(invoice.reference).to include(Date.current.strftime('%y%m%d'))
         end
+      end
+
+      it "handles multiple container types correctly" do
+        bl = create(:bill_of_landing,
+                    customer: customer,
+                    arrival_date: 10.days.ago,
+                    freetime: 5, # 5 defaulting days
+                    containers_20ft_dry: 1,
+                    containers_40ft_dry: 2,
+                    containers_20ft_reefer: 1,
+                    containers_40ft_reefer: 1,
+                    containers_20ft_special: 1,
+                    containers_40ft_special: 1, # 7 total containers
+                    exempted: false,
+                    is_valid: 1)
+
+        post "/api/v1/invoices", headers: headers
+
+        invoice = Invoice.find_by(bl_number: bl.number)
+        # 7 containers * 5 defaulting days * $80 = $2800
+        expect(invoice.amount).to eq(2800.0)
       end
     end
 
@@ -188,8 +213,10 @@ RSpec.describe "POST /api/v1/invoices", type: :request do
 
         post "/api/v1/invoices", headers: headers
 
+        defaulting_days = [bl.days_since_arrival - bl.freetime, 0].max
+        expected_amount = bl.total_containers * defaulting_days * 80.0
         invoice = Invoice.find_by(bl_number: bl.number)
-        expect(invoice.amount).to eq(560.0) # 7 containers * $80
+        expect(invoice.amount).to eq(expected_amount)
       end
 
       it "validates that bl_number exists in bills of lading" do

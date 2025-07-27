@@ -42,6 +42,11 @@ class BillOfLanding < ApplicationRecord
     ].compact.sum
   end
 
+  def days_since_arrival
+    return 0 unless arrival_date
+    (Date.current - arrival_date.to_date).to_i
+  end
+
   def self.overdue_today
     today = Date.current
     joins(:customer)

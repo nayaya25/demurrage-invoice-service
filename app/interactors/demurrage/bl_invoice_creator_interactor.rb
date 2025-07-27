@@ -15,7 +15,10 @@ module Demurrage
 
     private
     def create_invoice_for_bl(bl)
-      amount =  bl.total_containers * DAILY_RATE_USD
+      defaulting_days = [bl.days_since_arrival - bl.freetime, 0].max
+      return nil if defaulting_days.zero?
+
+      amount =  bl.total_containers * defaulting_days * DAILY_RATE_USD
       reference = generate_reference
       Invoice.create!(
         reference:,
